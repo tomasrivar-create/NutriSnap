@@ -1,1 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriSnap - UI Avanzada</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
 
+        :root {
+            --bg-color: #F8F9FA;
+            --primary-mint: #4ade80; /* Más vibrante */
+            --secondary-lilac: #c084fc;
+            --accent-peach: #fbbf24; /* Amarillo vibrante */
+            --accent-blue: #38bdf8; /* Azul fresco */
+            --text-dark: #1e293b;
+            --soft-shadow: 8px 8px 20px #e2e8f0, -8px -8px 20px #ffffff;
+            --inner-shadow: inset 4px 4px 10px #e2e8f0, inset -4px -4px 10px #ffffff;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            min-height: 95vh;
+            padding-bottom: 80px;
+        }
+
+        /* Tarjetas más coloridas */
+        .card {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--soft-shadow);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-yellow { background: var(--accent-peach); color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        .card-blue { background: var(--accent-blue); color: #fff; }
+        .card-lilac { background: var(--secondary-lilac); color: #fff; }
+
+        /* Ilustraciones tipográficas (Emojis grandes como vectores gráficos) */
+        .illustration {
+            font-size: 64px;
+            margin: -10px 0 10px 0;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));
+        }
+
+        input[type="number"] {
+            width: calc(100% - 32px);
+            padding: 16px;
+            margin: 8px 0 16px 0;
+            border: none;
+            border-radius: 16px;
+            background: var(--bg-color);
+            box-shadow: var(--inner-shadow);
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            outline: none;
+            color: var(--text-dark);
+        }
+
+        label {
+            font-weight: 700;
+            text-align: left;
+            display: block;
+            margin-left: 10px;
+            color: #64748b;
+        }
+
+        .btn {
+            background-color: var(--primary-mint);
+            color: #fff;
+            border: none;
+            padding: 18px 24px;
+            border-radius: 24px;
+            font-size: 18px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(74, 222, 128, 0.4);
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn:active { transform: scale(0.95); }
+
+        .btn-secondary { background-color: var(--bg-color); color: var(--text-dark); box-shadow: var(--soft-shadow); }
+
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4ade80, #16a34a);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            box-shadow: 0px 12px 25px rgba(22, 163, 74, 0.4);
+            border: 4px solid #fff;
+            cursor: pointer;
+            z-index: 1000;
+            transition: transform 0.1s ease;
+        }
+        
+        .fab:active { transform: translateX(-50%) scale(0.90); }
+
+        .progress-ring {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary-mint) 70%, #f1f5f9 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+            box-shadow: inset 0px 0px 20px rgba(0,0,0,0.05);
+        }
+
+        .progress-inner {
+            width: 125px;
+            height: 125px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--soft-shadow);
+        }
+
+        .screen { display: none; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .screen.active { display: block; }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.95) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Contenedor de tips rotativos */
+        .tip-container { text-align: left; padding: 10px; }
+        .tip-title { font-weight: 900; font-size: 18px; margin-bottom: 5px; }
+        .tip-text { font-size: 15px; line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- PANTALLA 1: ONBOARDING -->
+        <div id="onboarding-screen" class="screen active">
+            <div class="card">
+                <div class="illustration">👋🏼</div>
+                <h2 style="margin-top: 0;">¡Bienvenido a NutriSnap!</h2>
+                <p>Personalicemos tu experiencia.</p>
+                
+                <label>Estatura (cm):</label>
+                <input type="number" id="estatura" placeholder="Ej. 175">
+
+                <label>Peso actual (kg):</label>
+                <input type="number" id="peso" placeholder="Ej. 70">
+
+                <label>Objetivo Principal:</label>
+                <button class="btn btn-secondary" style="margin-bottom: 20px; color: var(--text-dark);">💪🏼 Ganar Fuerza / Hipertrofia</button>
+
+                <button class="btn" onclick="navigateTo('dashboard-screen')">Generar mi plan</button>
+            </div>
+        </div>
+
+        <!-- PANTALLA 2: DASHBOARD (Principal) -->
+        <div id="dashboard-screen" class="screen">
+            <div class="card">
+                <h3 style="color: #64748b; margin-top: 0;">Resumen del Día</h3>
+                <div class="progress-ring">
+                    <div class="progress-inner">
+                        <span style="font-size: 28px; font-weight: 900; color: var(--text-dark);">1,850</span>
+                        <span style="font-size: 13px; color: #94a3b8; font-weight: 700;">kcal ingeridas</span>
+                    </div>
+                </div>
+                <p style="font-size: 18px;">Meta restante: <strong style="color: var(--primary-mint);">650 kcal</strong></p>
+            </div>
+
+            <!-- Tip de Nutrición y Deporte -->
+            <div class="card card-blue">
+                <div class="tip-container">
+                    <div class="tip-title">💧 Hidratación y Recuperación</div>
+                    <div class="tip-text">Para optimizar la recuperación tras rutinas exigentes de fuerza (como cuádriceps e isquiosurales), mantén una hidratación alta a lo largo del día. Esto es vital si complementas tu dieta con creatina para mejorar tu rendimiento.</div>
+                </div>
+            </div>
+
+            <!-- Recomendación de Comida -->
+            <div class="card card-yellow" style="margin-bottom: 100px;">
+                <div class="illustration">🥗</div>
+                <div class="tip-container">
+                    <div class="tip-title">Cena Ideal</div>
+                    <div class="tip-text">Te sugerimos pescado a la plancha con arroz integral. Te aportará carbohidratos complejos y proteína magra sin pasarte de tus macros.</div>
+                </div>
+            </div>
+
+            <button class="fab" onclick="navigateTo('scanner-screen')">📸</button>
+        </div>
+
+        <!-- PANTALLA 3: ESCÁNER / CONFIRMACIÓN -->
+        <div id="scanner-screen" class="screen">
+            <div class="card">
+                <div style="height: 300px; background-color: #1e293b; border-radius: 20px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; color: white; position: relative; overflow: hidden;">
+                    <div style="position: absolute; border: 3px dashed rgba(255,255,255,0.5); width: 80%; height: 80%; border-radius: 15px;"></div>
+                    [ Área del modelo de IA ]
+                </div>
+                
+                <h2 style="color: var(--primary-mint); margin: 0;">¡Alimento detectado!</h2>
+                <p style="font-size: 18px; font-weight: bold;">Salmón y Arroz (420 kcal)</p>
+                
+                <label>Ajustar porción (gramos):</label>
+                <input type="number" value="200">
+
+                <button class="btn" onclick="registrarComida()">Guardar Comida</button>
+                <button class="btn btn-secondary" onclick="navigateTo('dashboard-screen')" style="margin-top: 15px;">Cancelar</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function navigateTo(targetScreenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(targetScreenId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function registrarComida() {
+            alert('¡Genial! Tu comida se registró y tus métricas se actualizaron.');
+            navigateTo('dashboard-screen');
+        }
+    </script>
+
+</body>
+</html>
